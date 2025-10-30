@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
+    <link rel="stylesheet" href="contact.css" />
+</head>
+<body>
+    <header class="navbar">
+    <div class="top-bar">
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo">
+      </div>
+
+      <div class="search-section">
+        <input type="text" placeholder="Search">
+        <select>
+          <option>English</option>
+          <option>Français</option>
+          <option>Español</option>
+        </select>
+        <i class="fa-regular fa-bell"></i>
+        <img src="images/user.jpg" alt="User" class="user">
+      </div>
+    </div>
+
+    <nav class="menu">
+      <ul class="links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Planets</a></li>
+        <li><a href="#">Missions</a></li>
+        <li><a href="#">Gallery</a></li>
+      </ul>
+      <button class="contact-btn">Contact</button>
+    </nav>
+  </header>
+
+<!-- CONTACT FORM -->
+<section class="contact-section">
+  <div class="contact-container">
+
+    <!-- Left Side -->
+    <div class="contact-info">
+      <img src="images/cont background .jpg" alt="Moon">
+      <div class="overlay">
+        <h2>Contact Us</h2>
+        <p>Say something to start a live chat!</p>
+        <div class="info-item"><i class="fas fa-phone"></i> +1012 3456 789</div>
+        <div class="info-item"><i class="fas fa-envelope"></i> demo@gmail.com</div>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="contact-form">
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" required>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Select Subject?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="subject" checked> General Inquiry</label>
+            <label><input type="radio" name="subject"> General Inquiry</label>
+            <label><input type="radio" name="subject"> General Inquiry</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Write your message..."></textarea>
+        </div>
+
+        <button type="submit" class="send-btn" onclick="window.location.href='contact-success.html'">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+  <!-- CONTACT CARDS -->
+<section class="cards-section">
+  <div class="contact-card">
+    <i class="fa-solid fa-envelope"></i>
+    <h3>Email</h3>
+    <p>For any inquiries or assistance, feel free to contact us via email. We are here to help with your questions.</p>
+    <a href="mailto:info@example.com" class="contact-link">info@example.com</a>
+  </div>
+
+  <div class="contact-card">
+    <i class="fa-solid fa-comments"></i>
+    <h3>Live Chat</h3>
+    <p>Connect with us through live chat for instant support and answers to your questions. We're here to help you!</p>
+    <a href="#" class="contact-link">Click Here ></a>
+  </div>
+
+  <div class="contact-card">
+    <i class="fa-solid fa-phone"></i>
+    <h3>Phone</h3>
+    <p>Call us now for immediate assistance! Our team is ready to help you with any inquiries or support you need.</p>
+    <a href="tel:+94112224556" class="contact-link">+94 112 224 556</a>
+  </div>
+</section>
+
+  <footer class="footer">
+    <div class="footer-gen">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Information</h4>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section subscribe">
+      <h4>Subscribe</h4>
+      <form>
+        <input type="email" placeholder="Email address" required>
+      </form>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="footer-bottom">
+    <div class="footer-logo">
+      <img src="images/logo.png" alt="Logo">
+    </div>
+
+    <div class="footer-links">
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+    </div>
+
+    
+  </div>
+  </div>
+</footer>
+</body>
+</html>
