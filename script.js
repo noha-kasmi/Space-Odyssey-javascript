@@ -62,7 +62,7 @@ async function loadMissions() {
                 <h3 style="color: #666;">Erreur de chargement</h3>
                 <p style="color: #999;">Impossible de charger les missions. Vérifiez que le fichier missions.json existe.</p>
                 <button class="btn btn-primary" onclick="openMissionForm()" style="margin-top: 20px;">
-                    <i class="fas fa-plus"></i> Ajouter votre première mission
+                     Ajouter votre première mission
                 </button>
             </div>
         `;
