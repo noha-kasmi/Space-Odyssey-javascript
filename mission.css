@@ -54,8 +54,8 @@
 }
 
 .nav-favorite-btn {
-  background: transparent;
-  border: 2px solid grey;
+  background: black;
+  border: 3px solid rgb(255, 149, 0);
   color: white;
   padding: 8px 12px;
   border-radius: 20px;
@@ -69,14 +69,14 @@
 }
 
 .nav-favorite-btn:hover {
-  background: grey;
+  background: rgb(255, 149, 0);
   color: black;
   transform: scale(1.05);
 }
 
 .favorite-count {
-  background: grey;
-  color: white;
+  background: white;
+  color: black;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -145,7 +145,7 @@
 /* ===== HERO ===== */
 .hero {
   position: relative;
-  height: 350px;
+  height: 550px;
   background: url('images/slider.png') no-repeat center/cover;
   display: flex;
   justify-content: center;
@@ -190,7 +190,7 @@
 }
 
 .search-filters-section {
-  background: black;
+  background: linear-gradient(55deg, grey, black);
   padding: 25px 40px;
   margin: 20px 25px;
   border-radius: 25px;
@@ -457,24 +457,24 @@ h1 {
 }
 
 .btn-edit {
-  background: #f5f5f5;
-  color: #333;
+  background: rgba(79, 79, 222, 0.792);
+  color: white;
   border: 1px solid #ccc;
 }
 
 .btn-edit:hover {
-  background: #333;
+  background: rgb(110, 110, 164);
   color: white;
 }
 
 .btn-delete {
-  background: #f5f5f5;
-  color: #666;
+  background: rgb(245, 61, 61);
+  color: white;
   border: 1px solid #ccc;
 }
 
 .btn-delete:hover {
-  background: #666;
+  background: rgb(186, 68, 68);
   color: white;
 }
 
@@ -482,8 +482,8 @@ h1 {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
+  background: black;
+  border: 3px solid rgb(255, 149, 0);
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -492,18 +492,18 @@ h1 {
   justify-content: center;
   cursor: pointer;
   font-size: 1em;
-  color: #ccc;
+  color: white;
   transition: all 0.3s ease;
   z-index: 2;
 }
 
 .favorite-star:hover {
-  background: white;
+  background: #ed7d2d;
   transform: scale(1.1);
 }
 
 .favorite-star.active {
-  color: #666;
+  color: rgb(255, 94, 0);
   background: white;
 }
 
@@ -607,7 +607,7 @@ h1 {
 .btn-cancel {
   background: #f5f5f5;
   color: #666;
-  border: none;
+  border: 3px solid red;  
   padding: 12px 24px;
   border-radius: 25px;
   cursor: pointer;
@@ -621,9 +621,9 @@ h1 {
 }
 
 .btn-save {
-  background: #333;
-  color: white;
-  border: none;
+  background: #f5f5f5;
+  color: #666;
+  border: 3px solid green;
   padding: 12px 24px;
   border-radius: 25px;
   cursor: pointer;
@@ -663,7 +663,7 @@ h1 {
 }
 
 .favorites-header {
-  background: #333;
+  background: rgba(255, 149, 0);
   color: white;
   padding: 25px 30px;
   display: flex;
@@ -1182,6 +1182,3 @@ footer {
   }
 }
 
-.favorites-container {
-  animation: slideInFavorites 0.3s ease;
-}
