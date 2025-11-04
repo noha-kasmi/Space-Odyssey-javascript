@@ -1,4 +1,4 @@
-// Données des missions avec favoris
+// ===== VARIABLES GLOBALES =====
 let missions = [];
 let favorites = JSON.parse(localStorage.getItem('missionFavorites')) || [];
 let currentMissionId = null;
@@ -11,6 +11,7 @@ const globalSearch = document.getElementById('globalSearch');
 const agencyFilter = document.getElementById('agencyFilter');
 const yearFilter = document.getElementById('yearFilter');
 const typeFilter = document.getElementById('typeFilter');
+const favoriteCount = document.getElementById('favoriteCount');
 
 // Images par défaut pour les missions
 const defaultImages = {
@@ -25,104 +26,54 @@ const defaultImages = {
     'ESA/JAXA': 'https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&h=500&fit=crop'
 };
 
-// Initialisation
+// ===== INITIALISATION =====
 document.addEventListener('DOMContentLoaded', function() {
     loadMissions();
     setupEventListeners();
+    updateFavoriteCount();
 });
 
-// Charger les missions
+// ===== FONCTIONS D'INITIALISATION =====
+
+// Charger les missions depuis le fichier JSON
 async function loadMissions() {
     try {
         const response = await fetch('missions.json');
+        
+        if (!response.ok) {
+            throw new Error('Fichier missions.json non trouvé');
+        }
+        
         const data = await response.json();
         missions = data.missions;
         initializeFilters();
         displayMissions(missions);
     } catch (error) {
         console.error('Erreur lors du chargement des missions:', error);
-        // Charger des données par défaut en cas d'erreur
-        missions = getDefaultMissions();
+        // Si le fichier n'existe pas, créer un tableau vide
+        missions = [];
         initializeFilters();
         displayMissions(missions);
+        
+        // Afficher un message d'erreur
+        missionsContainer.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3em; color: #ff9800; margin-bottom: 20px;"></i>
+                <h3 style="color: #666;">Erreur de chargement</h3>
+                <p style="color: #999;">Impossible de charger les missions. Vérifiez que le fichier missions.json existe.</p>
+                <button class="btn btn-primary" onclick="openMissionForm()" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Ajouter votre première mission
+                </button>
+            </div>
+        `;
     }
 }
-
-// Données par défaut basées sur votre JSON
-function getDefaultMissions() {
-    return [
-        {
-            "id": 1,
-            "name": "Apollo 11",
-            "agency": "NASA",
-            "objective": "Premier alunissage habité",
-            "launchDate": "1969-07-16",
-            "type": "Alunissage",
-            "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 2,
-            "name": "Voyager 1",
-            "agency": "NASA",
-            "objective": "Exploration du système solaire externe",
-            "launchDate": "1977-09-05",
-            "type": "Exploration",
-            "image": "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 3,
-            "name": "Rosetta",
-            "agency": "ESA",
-            "objective": "Étude de la comète 67P/Churyumov-Gerasimenko",
-            "launchDate": "2004-03-02",
-            "type": "Observation",
-            "image": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 4,
-            "name": "Curiosity",
-            "agency": "NASA",
-            "objective": "Exploration du cratère Gale sur Mars",
-            "launchDate": "2011-11-26",
-            "type": "Exploration",
-            "image": "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 5,
-            "name": "Artemis I",
-            "agency": "NASA",
-            "objective": "Test du système de lancement SLS et d'Orion",
-            "launchDate": "2022-11-16",
-            "type": "Test",
-            "image": "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 6,
-            "name": "James Webb Space Telescope",
-            "agency": "NASA/ESA/CSA",
-            "objective": "Observation de l'univers primitif",
-            "launchDate": "2021-12-25",
-            "type": "Observation",
-            "image": "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=400&h=300&fit=crop"
-        },
-        {
-            "id": 7,
-            "name": "BepiColombo",
-            "agency": "ESA/JAXA",
-            "objective": "Exploration de la planète Mercure",
-            "launchDate": "2018-10-20",
-            "type": "Exploration",
-            "image": "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=400&h=300&fit=crop"
-        }
-    ];
-}
-
-
 
 // Initialiser les filtres
 function initializeFilters() {
     // Agences
     const agencies = [...new Set(missions.map(mission => mission.agency))];
+    agencyFilter.innerHTML = '<option value="">Toutes les agences</option>';
     agencies.forEach(agency => {
         const option = document.createElement('option');
         option.value = agency;
@@ -132,6 +83,7 @@ function initializeFilters() {
 
     // Années
     const years = [...new Set(missions.map(mission => new Date(mission.launchDate).getFullYear()))].sort((a, b) => b - a);
+    yearFilter.innerHTML = '<option value="">Toutes les années</option>';
     years.forEach(year => {
         const option = document.createElement('option');
         option.value = year;
@@ -141,6 +93,7 @@ function initializeFilters() {
 
     // Types
     const types = [...new Set(missions.map(mission => mission.type))];
+    typeFilter.innerHTML = '<option value="">Tous les types</option>';
     types.forEach(type => {
         const option = document.createElement('option');
         option.value = type;
@@ -148,6 +101,33 @@ function initializeFilters() {
         typeFilter.appendChild(option);
     });
 }
+
+// Configurer les écouteurs d'événements
+function setupEventListeners() {
+    // Recherche en temps réel
+    globalSearch.addEventListener('input', debounce(applyFilters, 300));
+    
+    // Fermer le popup en cliquant à l'extérieur
+    popupOverlay.addEventListener('click', function(event) {
+        if (event.target === popupOverlay) {
+            closePopup();
+        }
+    });
+    
+    // Empêcher la fermeture en cliquant à l'intérieur du formulaire
+    document.querySelector('.popup-form').addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+
+    // Fermer le popup favoris en cliquant à l'extérieur
+    document.getElementById('favoritesPopup').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeFavoritesPopup();
+        }
+    });
+}
+
+// ===== FONCTIONS D'AFFICHAGE =====
 
 // Afficher les missions
 function displayMissions(missionsToDisplay) {
@@ -175,7 +155,6 @@ function createMissionCard(mission) {
     const card = document.createElement('div');
     card.className = 'mission-card';
     
-    const missionYear = new Date(mission.launchDate).getFullYear();
     const imageUrl = mission.image || defaultImages[mission.agency] || defaultImages['NASA'];
     const isFavorite = favorites.includes(mission.id);
     
@@ -219,14 +198,11 @@ function createMissionCard(mission) {
     return card;
 }
 
-// Formater la date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+// ===== FONCTIONS DE GESTION DES FAVORIS =====
+
+// Mettre à jour le compteur de favoris
+function updateFavoriteCount() {
+    favoriteCount.textContent = favorites.length;
 }
 
 // Basculer le favori
@@ -234,25 +210,110 @@ function toggleFavorite(missionId) {
     const index = favorites.indexOf(missionId);
     
     if (index > -1) {
-        // Retirer des favoris
         favorites.splice(index, 1);
     } else {
-        // Ajouter aux favoris
         favorites.push(missionId);
     }
     
-    // Sauvegarder dans le localStorage
     localStorage.setItem('missionFavorites', JSON.stringify(favorites));
-    
-    // Re-afficher les missions
+    updateFavoriteCount();
     applyFilters();
 }
 
-// Filtrer par favoris
-function showFavorites() {
-    const favoriteMissions = missions.filter(mission => favorites.includes(mission.id));
-    displayMissions(favoriteMissions);
+// Afficher le popup des favoris
+function showFavoritesPopup() {
+    const favoritesPopup = document.getElementById('favoritesPopup');
+    const favoritesList = document.getElementById('favoritesList');
+    const noFavorites = document.getElementById('noFavorites');
+    
+    // Afficher ou masquer le message "Aucun favori"
+    if (favorites.length === 0) {
+        noFavorites.style.display = 'block';
+        favoritesList.style.display = 'none';
+    } else {
+        noFavorites.style.display = 'none';
+        favoritesList.style.display = 'block';
+        displayFavoritesList();
+    }
+    
+    favoritesPopup.style.display = 'flex';
 }
+
+// Fermer le popup des favoris
+function closeFavoritesPopup() {
+    const favoritesPopup = document.getElementById('favoritesPopup');
+    favoritesPopup.style.display = 'none';
+}
+
+// Afficher la liste des favoris dans le popup
+function displayFavoritesList() {
+    const favoritesList = document.getElementById('favoritesList');
+    const favoriteMissions = missions.filter(mission => favorites.includes(mission.id));
+    
+    favoritesList.innerHTML = '';
+    
+    favoriteMissions.forEach(mission => {
+        const favoriteItem = createFavoriteItem(mission);
+        favoritesList.appendChild(favoriteItem);
+    });
+}
+
+// Créer un élément favori pour le popup
+function createFavoriteItem(mission) {
+    const item = document.createElement('div');
+    item.className = 'favorite-item';
+    
+    const imageUrl = mission.image || defaultImages[mission.agency] || defaultImages['NASA'];
+    const launchYear = new Date(mission.launchDate).getFullYear();
+    
+    item.innerHTML = `
+        <div class="favorite-item-image">
+            <img src="${imageUrl}" alt="${mission.name}">
+        </div>
+        <div class="favorite-item-content">
+            <div class="favorite-item-header">
+                <h4 class="favorite-item-name">${mission.name}</h4>
+                <span class="favorite-item-agency">${mission.agency}</span>
+            </div>
+            <div class="favorite-item-details">
+                <div class="favorite-item-objective">${mission.objective}</div>
+                <div class="favorite-item-meta">
+                    <span><i class="fas fa-calendar-alt"></i> ${launchYear}</span>
+                    <span><i class="fas fa-tag"></i> ${mission.type}</span>
+                </div>
+            </div>
+        </div>
+        <div class="favorite-item-actions">
+            <button class="favorite-remove-btn" onclick="removeFromFavorites(${mission.id})">
+                <i class="fas fa-times"></i> Retirer
+            </button>
+        </div>
+    `;
+    
+    return item;
+}
+
+// Retirer une mission des favoris depuis le popup
+function removeFromFavorites(missionId) {
+    const index = favorites.indexOf(missionId);
+    if (index > -1) {
+        favorites.splice(index, 1);
+        localStorage.setItem('missionFavorites', JSON.stringify(favorites));
+        updateFavoriteCount();
+        displayFavoritesList();
+        
+        // Si plus de favoris, afficher le message
+        if (favorites.length === 0) {
+            document.getElementById('noFavorites').style.display = 'block';
+            document.getElementById('favoritesList').style.display = 'none';
+        }
+        
+        // Mettre à jour aussi l'affichage principal
+        applyFilters();
+    }
+}
+
+// ===== FONCTIONS DE FILTRAGE ET RECHERCHE =====
 
 // Rechercher les missions
 function searchMissions() {
@@ -292,22 +353,21 @@ function resetFilters() {
     displayMissions(missions);
 }
 
+// ===== FONCTIONS DE GESTION DES MISSIONS =====
+
 // Ouvrir le formulaire d'ajout
 function openMissionForm(missionId = null) {
     const popupTitle = document.getElementById('popupTitle');
-    const form = document.getElementById('missionForm');
     
     if (missionId) {
-        // Mode édition
         currentMissionId = missionId;
         const mission = missions.find(m => m.id === missionId);
         popupTitle.textContent = 'Modifier la Mission';
         populateForm(mission);
     } else {
-        // Mode ajout
         currentMissionId = null;
         popupTitle.textContent = 'Ajouter une Mission';
-        form.reset();
+        missionForm.reset();
         document.getElementById('missionId').value = '';
     }
     
@@ -347,17 +407,16 @@ function saveMission(event) {
     };
     
     if (currentMissionId) {
-        // Édition
         const index = missions.findIndex(m => m.id === currentMissionId);
         missions[index] = formData;
     } else {
-        // Ajout
         missions.push(formData);
     }
     
     displayMissions(missions);
     closePopup();
     updateFilters();
+    updateFavoriteCount();
 }
 
 // Modifier une mission
@@ -369,11 +428,11 @@ function editMission(missionId) {
 function deleteMission(missionId) {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette mission ?')) {
         missions = missions.filter(mission => mission.id !== missionId);
-        // Retirer aussi des favoris si présent
         const favIndex = favorites.indexOf(missionId);
         if (favIndex > -1) {
             favorites.splice(favIndex, 1);
             localStorage.setItem('missionFavorites', JSON.stringify(favorites));
+            updateFavoriteCount();
         }
         displayMissions(missions);
         updateFilters();
@@ -382,30 +441,21 @@ function deleteMission(missionId) {
 
 // Mettre à jour les filtres
 function updateFilters() {
-    // Réinitialiser les filtres
     agencyFilter.innerHTML = '<option value="">Toutes les agences</option>';
     yearFilter.innerHTML = '<option value="">Toutes les années</option>';
     typeFilter.innerHTML = '<option value="">Tous les types</option>';
-    
-    // Re-initialiser avec les nouvelles données
     initializeFilters();
 }
 
-// Configurer les écouteurs d'événements
-function setupEventListeners() {
-    // Recherche en temps réel
-    globalSearch.addEventListener('input', debounce(applyFilters, 300));
-    
-    // Fermer le popup en cliquant à l'extérieur
-    popupOverlay.addEventListener('click', function(event) {
-        if (event.target === popupOverlay) {
-            closePopup();
-        }
-    });
-    
-    // Empêcher la fermeture en cliquant à l'intérieur du formulaire
-    document.querySelector('.popup-form').addEventListener('click', function(event) {
-        event.stopPropagation();
+// ===== FONCTIONS UTILITAIRES =====
+
+// Formater la date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     });
 }
 
@@ -422,7 +472,7 @@ function debounce(func, wait) {
     };
 }
 
-// Exporter les fonctions globales
+// ===== EXPORTATION DES FONCTIONS GLOBALES =====
 window.searchMissions = searchMissions;
 window.applyFilters = applyFilters;
 window.resetFilters = resetFilters;
@@ -432,4 +482,6 @@ window.saveMission = saveMission;
 window.editMission = editMission;
 window.deleteMission = deleteMission;
 window.toggleFavorite = toggleFavorite;
-window.showFavorites = showFavorites;
+window.showFavoritesPopup = showFavoritesPopup;
+window.closeFavoritesPopup = closeFavoritesPopup;
+window.removeFromFavorites = removeFromFavorites;
