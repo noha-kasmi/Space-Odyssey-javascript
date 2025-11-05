@@ -23,6 +23,7 @@
 .logo {
   display: flex;
   align-items: center;
+
 }
 
 .logo img {
@@ -129,23 +130,28 @@
 }
 
 .contact-btn {
-  padding: 8px 20px;
-  background-color: rgb(231, 221, 221);
-  border: 2px solid white;   
-  border-radius: 30px;           
-  cursor: pointer;
-  font-size: 14px;
+    padding: 8px 20px;
+    background: transparent;
+    color: white;
+    border: 3px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .contact-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px black;
+    background-color: #e0e0e0;
+    transform: translateY(-1px);
 }
+
+
 
 /* ===== HERO ===== */
 .hero {
   position: relative;
-  height: 550px;
+  height: 600px;
   background: url('images/slider.png') no-repeat center/cover;
   display: flex;
   justify-content: center;
@@ -174,7 +180,7 @@
 .hero-btn {
   background: transparent;
   color: white;
-  border: 2px solid white;
+  border: 3px solid rgb(255, 149, 0);
   padding: 12px 35px;
   margin-top: 20px;
   border-radius: 25px;
@@ -187,10 +193,8 @@
 }
 
 .hero-btn:hover {
-  background: white;
-  color: black;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px white;
 }
 
 /* ===== SECTION RECHERCHE ET FILTRES ===== */
@@ -212,7 +216,8 @@
 }
 
 .search-filters-section {
-  background: linear-gradient(55deg, grey, black);
+  background: black;
+  border: 3px solid rgb(255, 149, 0);
   padding: 25px 40px;
   margin: 20px 25px;
   border-radius: 25px;
@@ -251,7 +256,7 @@
 .search-btn {
   background: black;
   color: white;
-  border: none;
+  border: 3px solid rgb(255, 149, 0);
   padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
@@ -317,7 +322,7 @@
 .btn-primary {
   background: black;
   color: white;
-  border: 2px solid white;
+  border: 2px solid rgb(255, 149, 0);
 }
 
 .btn-primary:hover {
@@ -328,7 +333,7 @@
 .btn-secondary {
   background: black;
   color: white;
-  border: 2px solid white;
+  border: 2px solid rgb(255, 149, 0);
 }
 
 .btn-secondary:hover {
@@ -479,24 +484,26 @@ h1 {
 }
 
 .btn-edit {
-  background: rgba(79, 79, 222, 0.792);
+  background: #000000;
   color: white;
-  border: 1px solid #ccc;
+  border: 3px solid rgb(255, 149, 0);
 }
 
 .btn-edit:hover {
-  background: rgb(110, 110, 164);
+  background: rgba(75, 75, 240, 0.858);
+  border: 3px solid black;
   color: white;
 }
 
 .btn-delete {
-  background: rgb(245, 61, 61);
+  background: black;
   color: white;
-  border: 1px solid #ccc;
+  border: 3px solid rgb(255, 149, 0);
 }
 
 .btn-delete:hover {
-  background: rgb(186, 68, 68);
+  background: rgba(236, 110, 110, 0.93);
+  border: 3px solid black;
   color: white;
 }
 
@@ -838,6 +845,7 @@ h1 {
   color: #888;
   font-size: 1.3em;
 }
+
 
 /* ===== FOOTER ===== */
 footer {

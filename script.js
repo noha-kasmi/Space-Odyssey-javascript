@@ -485,3 +485,232 @@ window.toggleFavorite = toggleFavorite;
 window.showFavoritesPopup = showFavoritesPopup;
 window.closeFavoritesPopup = closeFavoritesPopup;
 window.removeFromFavorites = removeFromFavorites;
+
+// ===== GESTION DES ÉVÉNEMENTS AVANCÉE =====
+
+// Gestion des onglets
+function setupTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Animation de transition
+            missionsContainer.classList.add('loading');
+            
+            setTimeout(() => {
+                // Retirer la classe active de tous les boutons
+                tabButtons.forEach(b => b.classList.remove('active'));
+                // Ajouter la classe active au bouton cliqué
+                this.classList.add('active');
+                
+                const tabType = this.dataset.tab;
+                filterMissionsByTab(tabType);
+                
+                // Retirer l'état de chargement
+                missionsContainer.classList.remove('loading');
+            }, 300);
+        });
+    });
+}
+
+function filterMissionsByTab(tabType) {
+    let missionsToShow = [];
+    
+    switch(tabType) {
+        case 'all':
+            missionsToShow = missions;
+            break;
+        case 'favorites':
+            missionsToShow = missions.filter(mission => favorites.includes(mission.id));
+            break;
+        case 'my-missions':
+            // Simuler des missions utilisateur (basé sur l'agence NASA et ESA)
+            missionsToShow = missions.filter(mission => 
+                mission.agency === 'NASA' || mission.agency === 'ESA'
+            );
+            break;
+    }
+    
+    displayMissions(missionsToShow);
+}
+
+// Gestion des clics sur les cartes
+function setupCardInteractions() {
+    document.addEventListener('click', function(e) {
+        const missionCard = e.target.closest('.mission-card');
+        
+        if (missionCard && !e.target.closest('.mission-actions') && !e.target.closest('.favorite-star')) {
+            const missionId = missionCard.querySelector('.mission-title').textContent;
+            showMissionDetails(missionId);
+        }
+    });
+}
+
+// Affichage des détails d'une mission (simulé)
+function showMissionDetails(missionName) {
+    const mission = missions.find(m => m.name === missionName);
+    if (mission) {
+        showToast(`Détails de la mission: ${mission.name}`, 'success');
+        // Dans un vrai projet, on pourrait ouvrir un modal avec les détails complets
+        console.log('Mission details:', mission);
+    }
+}
+
+// Gestion de la navigation fluide
+function setupSmoothNavigation() {
+    // Intercepter les clics sur les liens de navigation
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.menu .links a') || 
+            e.target.matches('.hero-btn') || 
+            e.target.matches('.contact-btn a')) {
+            
+            if (e.target.getAttribute('href') && !e.target.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                navigateToPage(href);
+            }
+        }
+    });
+}
+
+function navigateToPage(url) {
+    // Animation de transition
+    document.body.style.opacity = '0.8';
+    document.body.style.transition = 'opacity 0.3s ease';
+    
+    setTimeout(() => {
+        window.location.href = url;
+    }, 300);
+}
+
+// Gestion avancée du formulaire
+function setupFormAdvancedHandling() {
+    const missionForm = document.getElementById('missionForm');
+    
+    // Réinitialisation avancée du formulaire
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.textContent = 'Réinitialiser';
+    resetBtn.className = 'btn btn-cancel';
+    resetBtn.style.marginRight = '10px';
+    resetBtn.addEventListener('click', resetMissionForm);
+    
+    // Ajouter le bouton réinitialiser avant le bouton sauvegarder
+    missionForm.querySelector('.btn-save').parentNode.insertBefore(resetBtn, missionForm.querySelector('.btn-save'));
+    
+    // Validation en temps réel améliorée
+    missionForm.querySelectorAll('input, select').forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('invalid')) {
+                validateField(this);
+            }
+        });
+    });
+}
+
+function validateField(field) {
+    const value = field.value.trim();
+    
+    switch(field.id) {
+        case 'name':
+            if (value.length < 2) {
+                showFieldError(field, 'Le nom doit contenir au moins 2 caractères');
+            } else {
+                showFieldSuccess(field);
+            }
+            break;
+        case 'objective':
+            if (value.length < 10) {
+                showFieldError(field, 'L\'objectif doit contenir au moins 10 caractères');
+            } else {
+                showFieldSuccess(field);
+            }
+            break;
+        case 'image':
+            if (value && !isValidUrl(value)) {
+                showFieldError(field, 'URL invalide');
+            } else {
+                showFieldSuccess(field);
+            }
+            break;
+    }
+}
+
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
+function showFieldError(field, message) {
+    field.classList.remove('valid');
+    field.classList.add('invalid');
+    // Vous pourriez ajouter des messages d'erreur spécifiques si besoin
+}
+
+function showFieldSuccess(field) {
+    field.classList.remove('invalid');
+    field.classList.add('valid');
+}
+
+function resetMissionForm() {
+    const form = document.getElementById('missionForm');
+    form.reset();
+    
+    // Réinitialiser les styles de validation
+    form.querySelectorAll('input, select').forEach(input => {
+        input.classList.remove('valid', 'invalid');
+    });
+    
+    showToast('Formulaire réinitialisé', 'success');
+}
+
+// Système de notifications amélioré
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = toast.querySelector('.toast-message');
+    const toastIcon = toast.querySelector('.toast-icon');
+    
+    toastMessage.textContent = message;
+    toast.className = `toast ${type} show`;
+    
+    // Changer l'icône selon le type
+    switch(type) {
+        case 'success':
+            toastIcon.className = 'fas fa-check-circle toast-icon';
+            break;
+        case 'error':
+            toastIcon.className = 'fas fa-exclamation-circle toast-icon';
+            break;
+        case 'warning':
+            toastIcon.className = 'fas fa-exclamation-triangle toast-icon';
+            break;
+    }
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// Initialisation complète des événements
+function initializeEventHandlers() {
+    setupTabs();
+    setupCardInteractions();
+    setupSmoothNavigation();
+    setupFormAdvancedHandling();
+}
+
+// Mettre à jour l'initialisation existante
+document.addEventListener('DOMContentLoaded', function() {
+    loadMissions();
+    setupEventListeners();
+    updateFavoriteCount();
+    initializeEventHandlers(); // Nouvelle ligne
+});

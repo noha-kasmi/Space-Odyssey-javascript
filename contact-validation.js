@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Expressions régulières pour la validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+    const phoneRegex = /^(?=(?:\D*\d){10,11}\D*$)[\+]?[0-9\s\-\(\)]+$/;
     const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]{2,}$/;
 
     // Fonctions de validation
@@ -176,4 +176,70 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Exposer les fonctions globalement si nécessaire
     window.resetContactForm = resetValidation;
+});
+
+
+
+
+// Gestion avancée du formulaire de contact
+function setupAdvancedFormHandling() {
+    const contactForm = document.getElementById('contactForm');
+    
+    // Insérer le bouton avant le bouton d'envoi
+    contactForm.querySelector('.send-btn').parentNode.insertBefore(resetBtn, contactForm.querySelector('.send-btn'));
+    
+    // Animation de soumission
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (validateForm()) {
+            animateFormSubmission();
+        }
+    });
+}
+
+function validateForm() {
+    return validateFirstName() && 
+           validateLastName() && 
+           validateEmail() && 
+           validatePhone() && 
+           validateMessage();
+}
+
+function animateFormSubmission() {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('.send-btn');
+    
+    // Animation de chargement
+    form.classList.add('loading');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+    
+    // Simulation d'envoi
+    setTimeout(() => {
+        form.classList.remove('loading');
+        showSuccessAnimation();
+        
+        // Redirection après succès
+        setTimeout(() => {
+            window.location.href = 'contact-success.html';
+        }, 1500);
+    }, 2000);
+}
+
+function showSuccessAnimation() {
+    const form = document.getElementById('contactForm');
+    form.style.transform = 'scale(0.95)';
+    form.style.opacity = '0.8';
+    
+    setTimeout(() => {
+        form.style.transform = '';
+        form.style.opacity = '';
+    }, 500);
+}
+
+// Initialisation avancée
+document.addEventListener('DOMContentLoaded', function() {
+    // Votre code existant...
+    setupAdvancedFormHandling(); // Ajoutez cette ligne
 });
